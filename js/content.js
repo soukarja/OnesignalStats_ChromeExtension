@@ -18,162 +18,112 @@ else if (window.location.href == "https://app.onesignal.com/stats6") getData(6);
 else if (!window.location.href.includes("app.onesignal.com/apps")) getData(3);
 
 function getData(sortmethod = 3) {
+  document.title = "Loading Stats...";
   document.body.innerHTML =
     "<font color='red'>Loading Stats... Please Wait</font>";
-  $.get("https://app.onesignal.com/unified/apps?view=stats", function (data) {
-    // console.log(data);
-    var link = document.createElement("link");
-    link.href = chrome.extension.getURL("css/main.css");
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.body.innerHTML = "";
-    if (data.success) {
-      document.title = "App Stats";
+  $.get(
+    "https://app.onesignal.com/unified/apps?view=stats",
+    function (data) {
+      // console.log(data);
+      var link = document.createElement("link");
+      link.href = chrome.extension.getURL("css/main.css");
+      link.type = "text/css";
+      link.rel = "stylesheet";
+      document.getElementsByTagName("head")[0].appendChild(link);
+      document.body.innerHTML = "";
+      if (data.success) {
+        document.title = "App Stats";
 
-      var objectValues = data.payload.items;
+        var objectValues = data.payload.items;
 
-      var container = document.createElement("div");
-      container.className = "onesignal_stats";
+        var container = document.createElement("div");
+        container.className = "onesignal_stats";
 
-      var tempRow = document.createElement("div");
-      tempRow.className = "rows";
+        var tempRow = document.createElement("div");
+        tempRow.className = "rows";
 
-      var tempSpan = document.createElement("a");
-      tempSpan.innerText = "App Name";
-      tempSpan.href = "https://app.onesignal.com/stats1";
-      if (sortmethod == 1) tempSpan.className = "selected";
-      tempRow.appendChild(tempSpan);
+        var tempSpan = document.createElement("a");
+        tempSpan.innerText = "App Name";
+        tempSpan.href = "https://app.onesignal.com/stats1";
+        if (sortmethod == 1) tempSpan.className = "selected";
+        tempRow.appendChild(tempSpan);
 
-      tempSpan = document.createElement("a");
-      tempSpan.innerText = "Total Downloads";
-      tempSpan.href = "https://app.onesignal.com/stats2";
-      if (sortmethod == 2) tempSpan.className = "selected";
-      tempRow.appendChild(tempSpan);
+        tempSpan = document.createElement("a");
+        tempSpan.innerText = "Total Downloads";
+        tempSpan.href = "https://app.onesignal.com/stats2";
+        if (sortmethod == 2) tempSpan.className = "selected";
+        tempRow.appendChild(tempSpan);
 
-      tempSpan = document.createElement("a");
-      tempSpan.innerText = "Avg Monthly Downloads";
-      tempSpan.href = "https://app.onesignal.com/stats3";
-      if (sortmethod == 3) tempSpan.className = "selected";
-      tempRow.appendChild(tempSpan);
+        tempSpan = document.createElement("a");
+        tempSpan.innerText = "Avg Monthly Downloads";
+        tempSpan.href = "https://app.onesignal.com/stats3";
+        if (sortmethod == 3) tempSpan.className = "selected";
+        tempRow.appendChild(tempSpan);
 
-      tempSpan = document.createElement("a");
-      tempSpan.innerText = "Avg Daily Downloads";
-      tempSpan.href = "https://app.onesignal.com/stats4";
-      if (sortmethod == 4) tempSpan.className = "selected";
-      tempRow.appendChild(tempSpan);
+        tempSpan = document.createElement("a");
+        tempSpan.innerText = "Avg Daily Downloads";
+        tempSpan.href = "https://app.onesignal.com/stats4";
+        if (sortmethod == 4) tempSpan.className = "selected";
+        tempRow.appendChild(tempSpan);
 
-      tempSpan = document.createElement("a");
-      tempSpan.innerText = "24H Downloads";
-      tempSpan.href = "https://app.onesignal.com/stats5";
-      if (sortmethod == 5) tempSpan.className = "selected";
-      tempRow.appendChild(tempSpan);
+        tempSpan = document.createElement("a");
+        tempSpan.innerText = "24H Downloads";
+        tempSpan.href = "https://app.onesignal.com/stats5";
+        if (sortmethod == 5) tempSpan.className = "selected";
+        tempRow.appendChild(tempSpan);
 
-      tempSpan = document.createElement("a");
-      tempSpan.innerText = "% Change";
-      tempSpan.href = "https://app.onesignal.com/stats6";
-      if (sortmethod == 6) tempSpan.className = "selected";
-      tempRow.appendChild(tempSpan);
+        tempSpan = document.createElement("a");
+        tempSpan.innerText = "% Change";
+        tempSpan.href = "https://app.onesignal.com/stats6";
+        if (sortmethod == 6) tempSpan.className = "selected";
+        tempRow.appendChild(tempSpan);
 
-      container.appendChild(tempRow);
+        container.appendChild(tempRow);
 
-      document.body.appendChild(container);
+        document.body.appendChild(container);
 
-      if (sortmethod == 1) {
-        objectValues.sort((a, b) => (a.name > b.name ? 1 : -1));
-      } else if (sortmethod == 2) {
-        objectValues.sort((a, b) => (a.user_count < b.user_count ? 1 : -1));
-      } else if (sortmethod == 3) {
-        objectValues.sort((a, b) =>
-          a.estimated_monthly_active_user_count <
-          b.estimated_monthly_active_user_count
-            ? 1
-            : -1
-        );
-      } else if (sortmethod == 4) {
-        objectValues.sort((a, b) =>
-          a.estimated_monthly_active_user_count /
-            a.cumulative_monthly_data.length <
-          b.estimated_monthly_active_user_count /
-            b.cumulative_monthly_data.length
-            ? 1
-            : -1
-        );
-      } else if (sortmethod == 5) {
-        objectValues.sort((a, b) =>
-          a.cumulative_monthly_data[a.cumulative_monthly_data.length - 1] -
-            a.cumulative_monthly_data[a.cumulative_monthly_data.length - 2] <
-          b.cumulative_monthly_data[b.cumulative_monthly_data.length - 1] -
-            b.cumulative_monthly_data[b.cumulative_monthly_data.length - 2]
-            ? 1
-            : -1
-        );
-      } else if (sortmethod == 6) {
-        objectValues.sort(
-          (a, b) => a.user_percentage_change < b.user_percentage_change
-        );
+        if (sortmethod == 1) {
+          objectValues.sort((a, b) => (a.name > b.name ? 1 : -1));
+        } else if (sortmethod == 2) {
+          objectValues.sort((a, b) => (a.user_count < b.user_count ? 1 : -1));
+        } else if (sortmethod == 3) {
+          objectValues.sort((a, b) =>
+            a.estimated_monthly_active_user_count <
+            b.estimated_monthly_active_user_count
+              ? 1
+              : -1
+          );
+        } else if (sortmethod == 4) {
+          objectValues.sort((a, b) =>
+            a.estimated_monthly_active_user_count /
+              a.cumulative_monthly_data.length <
+            b.estimated_monthly_active_user_count /
+              b.cumulative_monthly_data.length
+              ? 1
+              : -1
+          );
+        } else if (sortmethod == 5) {
+          objectValues.sort((a, b) =>
+            a.cumulative_monthly_data[a.cumulative_monthly_data.length - 1] -
+              a.cumulative_monthly_data[a.cumulative_monthly_data.length - 2] <=
+            b.cumulative_monthly_data[b.cumulative_monthly_data.length - 1] -
+              b.cumulative_monthly_data[b.cumulative_monthly_data.length - 2]
+              ? 1
+              : -1
+          );
+        } else if (sortmethod == 6) {
+          objectValues.sort((a, b) =>
+            a.user_percentage_change < b.user_percentage_change ? 1 : -1
+          );
+        }
+        showTable(objectValues);
+      } else {
+        alert("Cannot Connect to Onesignal");
+        document.body.innerHTML =
+          "<font color='red'>Cannot Connect to Onesignal</font>";
       }
-
-      // objectValues.sort((a, b) => (a.user_count < b.user_count) ? 1 : -1)
-      // objectValues.sort((a, b) => (a.estimated_monthly_active_user_count < b.estimated_monthly_active_user_count) ? 1 : -1)
-      // objectValues.sort((a, b) => (
-      //     a.cumulative_monthly_data[a.cumulative_monthly_data.length - 1] -
-      //     a.cumulative_monthly_data[a.cumulative_monthly_data.length - 2]
-      //     <=
-      //     b.cumulative_monthly_data[b.cumulative_monthly_data.length - 1] -
-      //     b.cumulative_monthly_data[b.cumulative_monthly_data.length - 2])
-      //     ? 1 : -1)
-      showTable(objectValues);
-
-      // console.log(objectValues);
-      // objectValues.sort(sortByTotalDownloads);
-      // objectValues.sort((a, b) => (a.user_count > b.user_count) ? 1 : -1)
-      // console.log(objectValues);
-
-      // objectValues.forEach(function (value) {
-      //   var name = value.name;
-      //   var user_count = value.user_count;
-      //   var estimated_monthly_active_user_count =
-      //     value.estimated_monthly_active_user_count;
-
-      //   console.log(value);
-
-      //   if (user_count > 0) {
-      //     var avgDaily = 0;
-      //     var days = 0;
-
-      //     value.cumulative_monthly_data.forEach(function (number) {
-      //       avgDaily += number;
-      //       days++;
-      //     });
-
-      //     content += `<div class="rows">
-      //     <span>${name}</span>
-      //     <span>${user_count}</span>
-      //     <span>${estimated_monthly_active_user_count}+</span>
-      //     <span>${Math.round(avgDaily / days)}+</span>
-      //     <span>${
-      //       value.cumulative_monthly_data[days - 1] -
-      //       value.cumulative_monthly_data[days - 2]
-      //     }</span>
-      //     <span>${
-      //       Math.round(value.user_percentage_change * 100) / 100
-      //     }%</span>
-      // </div>`;
-      //   }
-      // });
-
-      // content += `</div>`;
-      //     content += `<script>
-      //     document.querySelector(".selected").addEventListener("click", function(){
-      //         alert("clicked");
-      //     });
-      // </script>`;
-      // document.body.innerHTML = content;
-    } else {
-      alert("Cannot Connect to Onesignal");
     }
-  });
+  );
 }
 function clearTable() {
   var list = document.querySelectorAll(".onesignal_stats > .rows");
@@ -194,17 +144,7 @@ function showTable(objectValues) {
     var estimated_monthly_active_user_count =
       value.estimated_monthly_active_user_count;
 
-    // console.log(value);
-
     if (user_count > 0) {
-      //   var avgDaily = 0;
-      //   var days = 0;
-
-      //   value.cumulative_monthly_data.forEach(function (number) {
-      //     avgDaily += number;
-      //     days++;
-      //   });
-
       content += `<div class="rows">
           <span>${name}</span>
           <span>${formatNumber(user_count)}</span>
@@ -229,14 +169,9 @@ function showTable(objectValues) {
   });
   document.querySelector(".onesignal_stats").innerHTML =
     document.querySelector(".onesignal_stats").innerHTML + content;
-
-  //   var script = document.createElement("script");
-  //   script.src = chrome.extension.getURL("js/listeners.js");
-  //   document.body.appendChild(script);
 }
 
 function formatNumber(number) {
-  // return number;
   if (number < 1000) return number;
 
   if (number < 1000000) {
