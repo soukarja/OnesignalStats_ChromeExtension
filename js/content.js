@@ -157,12 +157,19 @@ function showTable(objectValues) {
           )}+</span>
           <span>${formatNumber(
             value.cumulative_monthly_data[
+              value.cumulative_monthly_data.length - 2
+            ] -
+              value.cumulative_monthly_data[
+                value.cumulative_monthly_data.length - 3
+              ]
+          )} (${formatNumber(
+            value.cumulative_monthly_data[
               value.cumulative_monthly_data.length - 1
             ] -
               value.cumulative_monthly_data[
                 value.cumulative_monthly_data.length - 2
               ]
-          )}</span>
+          )})</span>
           <span>${Math.round(value.user_percentage_change * 100) / 100}%</span>
       </div>`;
     }
