@@ -20,6 +20,10 @@
   -webkit-box-shadow: 1px 10px 11px -9px rgba(0, 0, 0, 0.87);
   -moz-box-shadow: 1px 10px 11px -9px rgba(0, 0, 0, 0.87);
 }
+.onesignal_stats .rows.total {
+  background: #290017;
+  border-top: solid 1px white;
+}
 
 .onesignal_stats .rows:first-child:hover {
   background: #ae0061;
