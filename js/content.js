@@ -9,11 +9,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-// try {
-//   importScripts("jquery.js");
-// } catch (e) {
-//   console.log(e);
-// }
+try {
+  // importScripts("jquery.js");
+  if( 'undefined' === typeof window){
+    importScripts('jquery.js');
+ } 
+} catch (e) {
+  console.log(e);
+}
 
 if (
   window.location.href == "https://app.onesignal.com/stats" ||
@@ -87,7 +90,7 @@ function getData(sortmethod = 3) {
   $.get("https://app.onesignal.com/unified/apps?view=stats", function (data) {
     // console.log(data);
     var link = document.createElement("link");
-    link.href = chrome.extension.getURL("css/main.css");
+    link.href = chrome.runtime.getURL("css/main.css");
     link.type = "text/css";
     link.rel = "stylesheet";
     document.getElementsByTagName("head")[0].appendChild(link);

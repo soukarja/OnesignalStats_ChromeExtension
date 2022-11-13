@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "Onesignal Stats",
     "version": "1.1",
     "description": "Analyse Onesignal Stats.",
@@ -17,12 +17,15 @@
       ],
     "permissions": [
         "contextMenus",
-        "tabs"
+        "tabs",
+        "storage",
+        "activeTab",
+        "scripting"
     ],
     "background": {
-        "scripts": ["js/jquery.js","js/background.js"]
+        "service_worker": "js/background.js"
     },
-    "browser_action" : {
+    "action" : {
         "default_icon" : "images/onesignal_logo.png"
     },
     "icons": {
@@ -30,5 +33,17 @@
         "32": "images/onesignal_logo.png",
         "48": "images/onesignal_logo.png",
         "128":"images/onesignal_logo.png"
-       }
+    },
+    "web_accessible_resources": [
+      {
+        "resources": [
+          "*.html",
+          "*.css",
+          "*.JS"
+        ],
+        "matches": [
+          "<all_urls>"
+        ]
+      }
+    ]
     }
