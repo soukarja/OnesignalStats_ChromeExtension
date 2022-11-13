@@ -1,13 +1,15 @@
 {
     "manifest_version": 2,
     "name": "Onesignal Stats",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Analyse Onesignal Stats.",
     "content_scripts": [
         {
           "matches": [
             "https://app.onesignal.com/apps",
-            "https://app.onesignal.com/stats*"
+            "https://dashboard.onesignal.com/apps",
+            "https://app.onesignal.com/stats*",
+            "https://dashboard.onesignal.com/stats*"
           ],
           "css" : ["css/main.css"],
           "js": ["js/jquery.js","js/content.js"]

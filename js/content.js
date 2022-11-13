@@ -9,19 +9,81 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-if (window.location.href == "https://app.onesignal.com/stats") getData();
-else if (window.location.href == "https://app.onesignal.com/stats1") getData(1);
-else if (window.location.href == "https://app.onesignal.com/stats2") getData(2);
-else if (window.location.href == "https://app.onesignal.com/stats3") getData(3);
-else if (window.location.href == "https://app.onesignal.com/stats4") getData(4);
-else if (window.location.href == "https://app.onesignal.com/stats5") getData(5);
-else if (window.location.href == "https://app.onesignal.com/stats6") getData(6);
-else if (!window.location.href.includes("app.onesignal.com/apps")) getData(3);
+// try {
+//   importScripts("jquery.js");
+// } catch (e) {
+//   console.log(e);
+// }
+
+if (
+  window.location.href == "https://app.onesignal.com/stats" ||
+  window.location.href == "https://dashboard.onesignal.com/stats"
+)
+  getData();
+else if (
+  window.location.href == "https://app.onesignal.com/stats1" ||
+  window.location.href == "https://dashboard.onesignal.com/stats1"
+)
+  getData(1);
+else if (
+  window.location.href == "https://app.onesignal.com/stats2" ||
+  window.location.href == "https://dashboard.onesignal.com/stats2"
+)
+  getData(2);
+else if (
+  window.location.href == "https://app.onesignal.com/stats3" ||
+  window.location.href == "https://dashboard.onesignal.com/stats3"
+)
+  getData(3);
+else if (
+  window.location.href == "https://app.onesignal.com/stats4" ||
+  window.location.href == "https://dashboard.onesignal.com/stats4"
+)
+  getData(4);
+else if (
+  window.location.href == "https://app.onesignal.com/stats5" ||
+  window.location.href == "https://dashboard.onesignal.com/stats5"
+)
+  getData(5);
+else if (
+  window.location.href == "https://app.onesignal.com/stats6" ||
+  window.location.href == "https://dashboard.onesignal.com/stats6"
+)
+  getData(6);
+// else if (
+//   !window.location.href.includes("app.onesignal.com/apps") &&
+//   !window.location.href.includes("dashboard.onesignal.com/apps")
+// )
+//   getData(3);
+else if (
+  window.location.href.includes("app.onesignal.com/apps") ||
+  window.location.href.includes("dashboard.onesignal.com/apps")
+) {
+  // console.log("hello");
+  setTimeout(function () {
+    var newAppsBtn = document.querySelector('a[href="/apps/new"]');
+  var aBtn = document.createElement("a");
+  aBtn.className = newAppsBtn.className;
+  aBtn.href = "https://app.onesignal.com/stats";
+  aBtn.target = "_blank";
+  aBtn.innerText = "View Stats";
+  aBtn.style.marginLeft = "10px";
+  
+  newAppsBtn.parentElement.appendChild(aBtn);
+  newAppsBtn.parentElement.style.display = "flex";
+  }, 5000);
+}
 
 function getData(sortmethod = 3) {
   document.title = "Loading Stats...";
   document.body.innerHTML =
     "<font color='red'>Loading Stats... Please Wait</font>";
+
+    // if (window.location.href.includes("app.onesignal.com"))
+    //   var url = "https://app.onesignal.com/unified/apps?view=stats";
+    // else
+    //   var url = "https://app.onesignal.com/unified/apps?view=stats";
+
   $.get("https://app.onesignal.com/unified/apps?view=stats", function (data) {
     // console.log(data);
     var link = document.createElement("link");
