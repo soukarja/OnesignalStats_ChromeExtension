@@ -131,13 +131,14 @@ function getData(sortmethod = 3) {
       tempRow.appendChild(tempSpan);
 
       tempSpan = document.createElement("a");
-      tempSpan.innerText = "24H Downloads";
+      tempSpan.innerText = "Last 3 Days Downloads";
       tempSpan.href = "https://app.onesignal.com/stats5";
       if (sortmethod == 5) tempSpan.className = "selected";
       tempRow.appendChild(tempSpan);
 
       tempSpan = document.createElement("a");
-      tempSpan.innerText = "% Change";
+      // tempSpan.innerText = "% Change";
+      tempSpan.innerText = "Last 30 Days Downloads";
       tempSpan.href = "https://app.onesignal.com/stats6";
       if (sortmethod == 6) tempSpan.className = "selected";
       tempRow.appendChild(tempSpan);
@@ -177,7 +178,7 @@ function getData(sortmethod = 3) {
         );
       } else if (sortmethod == 6) {
         objectValues.sort((a, b) =>
-          a.user_percentage_change < b.user_percentage_change ? 1 : -1
+          addNumbersInArray(a.cumulative_monthly_data) < addNumbersInArray(b.cumulative_monthly_data) ? 1 : -1
         );
       }
       showTable(objectValues);
@@ -207,7 +208,9 @@ function showTable(objectValues) {
   var totalAvgDaily = 0;
   var total24H = 0;
   var total24HPast = 0;
+  var total24HPast2 = 0;
   var totalPercChange = 0;
+  var totalLast30Days = 0;
 
   objectValues.forEach(function (value) {
     var name = value.name;
@@ -215,7 +218,9 @@ function showTable(objectValues) {
     var estimated_monthly_active_user_count =
       value.estimated_monthly_active_user_count;
 
-    if (user_count > 0) {
+    var thisMonthDownloads = addNumbersInArray(value.cumulative_monthly_data);
+
+    if (user_count > 0 && thisMonthDownloads > 0) {
       totalApps++;
       totalDownloads += user_count;
       totalAvgMonthly += estimated_monthly_active_user_count;
@@ -228,6 +233,14 @@ function showTable(objectValues) {
           value.cumulative_monthly_data.length - 2
         ] -
         value.cumulative_monthly_data[value.cumulative_monthly_data.length - 3];
+
+      totalLast30Days += thisMonthDownloads;
+
+      total24HPast2 +=
+        value.cumulative_monthly_data[
+          value.cumulative_monthly_data.length - 3
+        ] -
+        value.cumulative_monthly_data[value.cumulative_monthly_data.length - 4];
 
       total24H +=
         value.cumulative_monthly_data[
@@ -249,20 +262,28 @@ function showTable(objectValues) {
           )}+</span>
           <span>${formatNumber(
             value.cumulative_monthly_data[
+              value.cumulative_monthly_data.length - 3
+            ] -
+              value.cumulative_monthly_data[
+                value.cumulative_monthly_data.length - 4
+              ]
+          )} >> ${formatNumber(
+            value.cumulative_monthly_data[
               value.cumulative_monthly_data.length - 2
             ] -
               value.cumulative_monthly_data[
                 value.cumulative_monthly_data.length - 3
               ]
-          )} (${formatNumber(
+          )} >> ${formatNumber(
         value.cumulative_monthly_data[
           value.cumulative_monthly_data.length - 1
         ] -
           value.cumulative_monthly_data[
             value.cumulative_monthly_data.length - 2
           ]
-      )})</span>
-          <span>${Math.round(value.user_percentage_change * 100) / 100}%</span>
+      )}*</span>
+          <!-- <span>${Math.round(value.user_percentage_change * 100) / 100}%</span> -->
+          <span>${formatNumber(thisMonthDownloads)}</span>
       </div>`;
     }
   });
@@ -272,8 +293,9 @@ function showTable(objectValues) {
           <span>${formatNumber(totalDownloads)}</span>
           <span>${formatNumber(Math.round(totalAvgMonthly / totalApps))}+</span>
           <span>${formatNumber(Math.round(totalAvgDaily / totalApps))}+</span>
-          <span>${formatNumber(total24HPast)} (${formatNumber(total24H)})</span>
-          <span>${Math.round(totalPercChange / totalApps)}%</span>
+          <span>${formatNumber(total24HPast2)} >> ${formatNumber(total24HPast)} >> ${formatNumber(total24H)}*</span>
+         <!-- <span>${Math.round(totalPercChange / totalApps)}%</span> -->
+         <span>${formatNumber(totalLast30Days)}</span>
       </div>`;
 
   document.querySelector(".onesignal_stats").innerHTML =
@@ -290,4 +312,12 @@ function formatNumber(number) {
 
   var temp = Math.round(number / 100000) / 10;
   return temp + "M";
+}
+
+function addNumbersInArray(arr){
+  // var total = 0;
+  // for(var i = 0; i < arr.length; i++){
+  //   total += arr[i];
+  // }
+  return arr[arr.length - 1] - arr[0];
 }
